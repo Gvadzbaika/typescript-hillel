@@ -10,19 +10,19 @@ class Direction {
     get name() {
         return this._name;
     }
-    constructor(name) {
+    constructor(_name) {
+        this._name = _name;
         this.levels = [];
-        this._name = name;
     }
     addLevel(level) {
         this.levels.push(level);
     }
 }
 class Level {
-    constructor(name, program) {
+    constructor(_name, _program) {
+        this._name = _name;
+        this._program = _program;
         this.groups = [];
-        this._name = name;
-        this._program = program;
     }
     get name() {
         return this._name;
@@ -39,31 +39,33 @@ class Group {
         return this._students;
     }
     constructor(directionName, levelName) {
-        this._students = [];
         this.directionName = directionName;
         this.levelName = levelName;
+        this._students = [];
     }
     addStudent(student) {
         this._students.push(student);
     }
     showPerformance() {
-        const sortedStudents = this.students.sort((a, b) => b.getPerformanceRating() - a.getPerformanceRating());
+        const sortedStudents = this.students
+            .slice()
+            .sort((a, b) => b.getPerformanceRating() - a.getPerformanceRating());
         return sortedStudents;
     }
 }
 class Student {
     constructor(firstName, lastName, birthYear) {
-        this.grades = {};
-        this.attendance = [];
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthYear = birthYear;
+        this.grades = {};
+        this.attendance = [];
     }
     get fullName() {
         return `${this.lastName} ${this.firstName}`;
     }
     set fullName(value) {
-        [this.lastName, this.firstName] = value.split(" ");
+        [this.lastName, this.firstName] = value.split(' ');
     }
     get age() {
         return new Date().getFullYear() - this.birthYear;
@@ -85,54 +87,36 @@ class Student {
         return (averageGrade + attendancePercentage) / 2;
     }
 }
-// Создаем студентов
-const student1 = new Student("John", "Doe", 1995);
-const student2 = new Student("Alice", "Smith", 1998);
-// Добавляем оценки и посещаемость студентам
-student1.setGrade("Math", 90);
-student1.setGrade("History", 85);
-student1.markAttendance(true);
-student1.markAttendance(false);
-student2.setGrade("Math", 95);
-student2.setGrade("History", 88);
-student2.markAttendance(true);
-student2.markAttendance(true);
-// Создаем группы
-const group1 = new Group("Mathematics", "Advanced");
-const group2 = new Group("History", "Intermediate");
-// Добавляем студентов в группы
-group1.addStudent(student1);
-group1.addStudent(student2);
-group2.addStudent(student2);
-// Создаем уровни
-const level1 = new Level("Advanced", "Intensive");
-const level2 = new Level("Intermediate", "Regular");
-// Добавляем группы в уровни
-level1.addGroup(group1);
-level2.addGroup(group2);
-// Создаем направления
-const direction1 = new Direction("Science");
-const direction2 = new Direction("Humanities");
-// Добавляем уровни в направления
-direction1.addLevel(level1);
-direction2.addLevel(level2);
-// Создаем школу и добавляем направления
+// Создание школы
 const school = new School();
-school.addDirection(direction1);
-school.addDirection(direction2);
-// Выводим информацию о студентах и их успеваемости в каждой группе
-school.directions.forEach((direction) => {
-    direction.levels.forEach((level) => {
-        level.groups.forEach((group) => {
-            console.log(`Direction: ${direction.name}`);
-            console.log(`Level: ${level.name}, Program: ${level.program}`);
-            console.log(`Group: ${group.directionName} ${group.levelName}`);
-            const sortedStudents = group.showPerformance();
-            console.log("Students Performance:");
-            sortedStudents.forEach((student, index) => {
-                console.log(`${index + 1}. ${student.fullName}, Age: ${student.age}, Performance Rating: ${student.getPerformanceRating()}`);
-            });
-            console.log("\n");
-        });
-    });
-});
+// Добавление направлений
+const mathDirection = new Direction('Mathematics');
+const physicsDirection = new Direction('Physics');
+school.addDirection(mathDirection);
+school.addDirection(physicsDirection);
+// Добавление уровней
+const level1 = new Level('Level 1', 'Basic');
+const level2 = new Level('Level 2', 'Intermediate');
+mathDirection.addLevel(level1);
+mathDirection.addLevel(level2);
+// Добавление групп
+const mathGroupA = new Group('Mathematics', 'Level 1');
+const mathGroupB = new Group('Mathematics', 'Level 2');
+level1.addGroup(mathGroupA);
+level2.addGroup(mathGroupB);
+// Добавление студентов
+const student1 = new Student('John', 'Doe', 2005);
+const student2 = new Student('Alice', 'Smith', 2006);
+mathGroupA.addStudent(student1);
+mathGroupA.addStudent(student2);
+// Установка оценок и посещаемости для студентов
+student1.setGrade('Math', 95);
+student2.setGrade('Math', 88);
+student1.markAttendance(true);
+student2.markAttendance(false);
+// Получение рейтинга успеваемости для группы
+const mathGroupARating = mathGroupA.showPerformance();
+console.log('Performance Rating for Math Group A:', mathGroupARating);
+// Получение информации о студентах
+console.log('Student 1 Full Name:', student1.fullName);
+console.log('Student 2 Age:', student2.age);

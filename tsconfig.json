@@ -1,8 +1,8 @@
 {
-    "compilerOptions": {
-      "target": "ES6",
-      "outDir": "./dist",
-      "rootDir": "./src",
-      "lib": ["ES2017","DOM"],
-    }
+  "compilerOptions": {
+    "target": "ES6",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "lib": ["ES2017", "DOM"]
   }
+}

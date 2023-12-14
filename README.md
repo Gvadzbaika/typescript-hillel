@@ -1,1 +1,1 @@
-# typescript-starter
+# typescript-hillel
