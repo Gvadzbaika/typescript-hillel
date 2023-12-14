@@ -1,7 +1,7 @@
 class School {
   directions: Direction[] = [];
 
-  addDirection(direction: Direction) {
+  addDirection(direction: Direction): void {
     this.directions.push(direction);
   }
 }
@@ -53,7 +53,7 @@ class Group {
   showPerformance(): Student[] {
     const sortedStudents = this.students
       .slice()
-      .sort((a, b) => b.getPerformanceRating() - a.getPerformanceRating());
+      .sort((a: any, b: any) => b.getPerformanceRating() - a.getPerformanceRating());
     return sortedStudents;
   }
 }
@@ -89,14 +89,14 @@ class Student {
   }
 
   getPerformanceRating(): number {
-    const gradeValues = Object.values(this.grades);
+    const gradeValues: any = Object.values(this.grades);
 
     if (gradeValues.length === 0) return 0;
 
-    const averageGrade =
+    const averageGrade: any =
       gradeValues.reduce((sum, grade) => sum + grade, 0) / gradeValues.length;
 
-    const attendancePercentage =
+    const attendancePercentage: any =
       (this.attendance.filter((present) => present).length /
         this.attendance.length) *
       100;
