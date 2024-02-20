@@ -1,121 +1,117 @@
 class Note {
-    constructor(id, title, content, creationDate) {
+    constructor(id, title, content) {
         this.id = id;
         this.title = title;
         this.content = content;
-        this.creationDate = creationDate;
-        this.lastEditDate = creationDate;
-        this.status = false; // By default, a note is pending
-    }
-    // Getter methods
-    getId() {
-        return this.id;
-    }
-    getTitle() {
-        return this.title;
-    }
-    getContent() {
-        return this.content;
-    }
-    getCreationDate() {
-        return this.creationDate;
-    }
-    getLastEditDate() {
-        return this.lastEditDate;
-    }
-    getStatus() {
-        return this.status;
-    }
-    // Setter methods
-    setTitle(newTitle) {
-        this.title = newTitle;
-        this.lastEditDate = new Date();
-    }
-    setContent(newContent) {
-        this.content = newContent;
-        this.lastEditDate = new Date();
-    }
-    setStatus(status) {
-        this.status = status;
-        this.lastEditDate = new Date();
+        this.creationDate = new Date();
+        this.editDate = new Date();
+        this.status = 'todo';
     }
 }
-class TodoList {
+class DefaultNote extends Note {
+    constructor(id, title, content) {
+        super(id, title, content);
+    }
+    editContent(newContent) {
+        this.content = newContent;
+        this.editDate = new Date();
+    }
+}
+class ConfirmationRequiredNote extends Note {
+    constructor(id, title, content, requiresConfirmation) {
+        super(id, title, content);
+        this.requiresConfirmation = requiresConfirmation;
+    }
+    editContent(newContent) {
+        const confirmation = confirm("Ви впевнені, що хочете змінити цю нотатку?");
+        if (confirmation) {
+            this.content = newContent;
+            this.editDate = new Date();
+        }
+        else {
+            console.log('Редагування нотатки скасовано.');
+        }
+    }
+}
+class ToDoList {
     constructor() {
         this.notes = [];
     }
-    // Method to add a new note
-    addNote(title, content) {
-        const newNote = new Note(this.notes.length + 1, title, content, new Date());
+    addNote(title, content, requiresConfirmation = false) {
+        if (title.trim() === '' || content.trim() === '') {
+            console.error('Назва та зміст нотатки не можуть бути порожніми.');
+            return;
+        }
+        const id = this.notes.length + 1;
+        const newNote = requiresConfirmation ?
+            new ConfirmationRequiredNote(id, title, content, requiresConfirmation) :
+            new DefaultNote(id, title, content);
         this.notes.push(newNote);
     }
-    // Method to remove a note by ID
-    removeNoteById(id) {
-        this.notes = this.notes.filter(note => note.getId() !== id);
-    }
-    // Method to edit a note by ID
-    editNoteById(id, newTitle, newContent) {
-        const noteToEdit = this.notes.find(note => note.getId() === id);
-        if (noteToEdit) {
-            noteToEdit.setTitle(newTitle);
-            noteToEdit.setContent(newContent);
+    deleteNote(id) {
+        const index = this.notes.findIndex(note => note.id === id);
+        if (index !== -1) {
+            this.notes.splice(index, 1);
+        }
+        else {
+            console.error('Нотатка з вказаним id не знайдена.');
         }
     }
-    // Method to get a note by ID
-    getNoteById(id) {
-        return this.notes.find(note => note.getId() === id);
+    editNote(id, title, content) {
+        const note = this.getNoteById(id);
+        if (note) {
+            note.title = title;
+            note.content = content;
+            note.editDate = new Date();
+            if (note instanceof ConfirmationRequiredNote) {
+                note.status = 'todo';
+            }
+        }
+        else {
+            console.error('Нотатка з вказаним id не знайдена.');
+        }
     }
-    // Method to get all notes
+    getNoteById(id) {
+        return this.notes.find(note => note.id === id);
+    }
     getAllNotes() {
         return this.notes;
     }
-    // Method to mark a note as completed by ID
-    markNoteAsCompleted(id) {
-        const noteToComplete = this.notes.find(note => note.getId() === id);
-        if (noteToComplete) {
-            noteToComplete.setStatus(true);
+    markNoteAsDone(id) {
+        const note = this.getNoteById(id);
+        if (note) {
+            note.status = 'done';
+        }
+        else {
+            console.error('Нотатка з вказаним id не знайдена.');
         }
     }
-    // Method to get total number of notes
-    getTotalNotesCount() {
+    getNumberOfNotes() {
         return this.notes.length;
     }
-    // Method to get number of pending notes
-    getPendingNotesCount() {
-        return this.notes.filter(note => !note.getStatus()).length;
+    getNumberOfUndoneNotes() {
+        return this.notes.filter(note => note.status === 'todo').length;
     }
-    // Method to search notes by title or content
-    searchNotes(query) {
-        query = query.toLowerCase();
-        return this.notes.filter(note => note.getTitle().toLowerCase().includes(query) ||
-            note.getContent().toLowerCase().includes(query));
+    searchNotesByKeyword(keyword) {
+        return this.notes.filter(note => note.title.includes(keyword) || note.content.includes(keyword));
     }
-    // Method to sort notes by status or creation date
-    sortNotesBy(property) {
-        this.notes.sort((a, b) => {
-            if (property === 'status') {
-                return a.getStatus() === b.getStatus() ? 0 : a.getStatus() ? 1 : -1;
-            }
-            else if (property === 'creationDate') {
-                return a.getCreationDate().getTime() - b.getCreationDate().getTime();
-            }
-            return 0;
-        });
+    sortNotesByStatus() {
+        this.notes.sort((a, b) => a.status.localeCompare(b.status));
+    }
+    sortNotesByCreationDate() {
+        this.notes.sort((a, b) => a.creationDate.getTime() - b.creationDate.getTime());
     }
 }
-// Example usage:
-const todoList = new TodoList();
-todoList.addNote("Shopping", "Buy groceries for the week");
-todoList.addNote("Meeting", "Prepare presentation for the meeting");
-todoList.addNote("Exercise", "Go for a jog in the park");
+// Test
+const todoList = new ToDoList();
+todoList.addNote('Приклад 1', 'Це зразок нотатки 1');
+todoList.addNote('Приклад 2', 'Це зразок нотатки 2');
+todoList.addNote('Приклад 3', 'Це зразок нотатки 3, яка вимагає підтвердження', true);
 console.log(todoList.getAllNotes());
-todoList.editNoteById(2, "Meeting", "Prepare agenda for the meeting");
-console.log(todoList.searchNotes("shopping"));
-console.log(todoList.searchNotes("meeting"));
-todoList.markNoteAsCompleted(1);
-console.log(todoList.getTotalNotesCount());
-console.log(todoList.getPendingNotesCount());
-todoList.sortNotesBy('status');
-console.log(todoList.getAllNotes());
-todoList.sortNotesBy('creationDate');
-console.log(todoList.getAllNotes());
+console.log('Кількість нотаток:', todoList.getNumberOfNotes());
+console.log('Кількість невиконаних нотаток:', todoList.getNumberOfUndoneNotes());
+todoList.markNoteAsDone(1);
+console.log('Після відзначення нотатки як виконаної:', todoList.getAllNotes());
+console.log('Пошук за ключовим словом "зразок":', todoList.searchNotesByKeyword('зразок'));
+todoList.sortNotesByCreationDate();
+console.log('Сортування за датою створення:', todoList.getAllNotes());
