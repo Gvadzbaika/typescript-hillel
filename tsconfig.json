@@ -3,6 +3,8 @@
     "target": "ES6",
     "outDir": "./dist",
     "rootDir": "./src",
-    "lib": ["ES2017", "DOM"]
-  }
-}
+    "lib": ["ES2017", "DOM"],
+        "module": "commonjs",
+        "esModuleInterop": true
+      }
+    }
