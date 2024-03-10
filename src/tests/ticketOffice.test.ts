@@ -1,5 +1,5 @@
-import { TicketOffice } from './servises/ticketOffice';
-import { Visitor } from './servises/models/visitor';
+import { TicketOffice } from '../servises/ticketOffice';
+import { Visitor } from '../servises/models/visitor';
 
 describe('TicketOffice', () => {
   let ticketOffice: TicketOffice;

@@ -1,14 +1,14 @@
 import { Employee } from './models/employee';
 import { Animal } from './models/animal';
-import { Administrator } from './models/administrator';
 import { Visitor } from './models/visitor';
-import { Clients } from './models/visitor';
+import { Observer, Subject } from './observer';
 
-export class Administration implements Administrator {
+export abstract class Administration implements Subject {
   private employees: Employee[] = [];
   private animals: Animal[] = [];
   private notifications: string[] = [];
-  private clients: Clients[] = [];
+  private clients: Visitor[] = [];
+  private observers: Observer[] = [];
 
   addEmployee(employee: Employee): void {
     this.employees.push(employee);
@@ -48,13 +48,33 @@ export class Administration implements Administrator {
     return this.animals;
   }
 
-  sendNewsToClients(news: string, clients: Visitor[]): void {
-    clients.forEach((client) => {
-      console.log(`Sending news "${news}" to ${client.name}`);
-      // Логіка надсилання новин
+  // Абстрактний метод для відправлення новин клієнтам
+  abstract sendNewsToClients(news: string, clients: Visitor[]): void;
+
+  // Реалізація методів спостерігача
+  addObserver(observer: Observer): void {
+    this.observers.push(observer);
+    console.log('Observer added.');
+  }
+
+  removeObserver(observer: Observer): void {
+    const index = this.observers.indexOf(observer);
+    if (index !== -1) {
+      this.observers.splice(index, 1);
+      console.log('Observer removed.');
+    } else {
+      console.log('Observer not found.');
+    }
+  }
+
+  notifyObservers(): void {
+    console.log('Notifying observers...');
+    this.observers.forEach((observer) => {
+      observer.update(this.notifications.join('\n'));
     });
   }
 }
+
 export class ConcreteAdministration extends Administration {
   constructor() {
     super();

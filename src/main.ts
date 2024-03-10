@@ -3,7 +3,6 @@ import { Animal } from './servises/models/animal';
 import { Accountant } from './servises/accounting';
 import { Visitor } from './servises/models/visitor';
 import { TicketOffice } from './servises/ticketOffice';
-import { Administration } from './servises/administration';
 import { ConcreteAdministration } from './servises/administration';
 
 // Створюємо деяких працівників і тварин
@@ -55,51 +54,30 @@ ticketOffice.sellTicket('adult', adultVisitor);
 ticketOffice.sellTicket('child', childVisitor);
 ticketOffice.sellTicket('family', familyVisitor);
 
-// Створення екземпляру класу адміністрації
-const admin = new Administration();
-
-// Створення та додавання співробітників
-const employee1: Employee = {
-  name: 'John Doe',
-  position: 'Manager',
-  salary: 5000,
-};
-const employee2: Employee = {
-  name: 'Alice Smith',
-  position: 'Zookeeper',
-  salary: 3000,
-};
-
-admin.addEmployee(employee1);
-admin.addEmployee(employee2);
-
-// Видалення співробітника
-admin.removeEmployee(employee1);
-
-// Створення та додавання тварин
-const animal1: Animal = { name: 'Lion', species: 'Panthera leo' };
-const animal2: Animal = { name: 'Elephant', species: 'Loxodonta africana' };
-
-admin.addAnimal(animal1);
-admin.addAnimal(animal2);
-
-// Видалення тварини
-admin.removeAnimal(animal1);
-
-// Виведення всіх співробітників, тварин
-console.log('Employees:', admin.getEmployees());
-console.log('Animals:', admin.getAnimals());
-
 // Створення об'єкту адміністрації
-const admin2: Administration = new ConcreteAdministration(); // Потрібно створити конкретний клас, який реалізує абстрактний клас адміністрації
+const administration = new ConcreteAdministration();
+
+// Додавання співробітників
+administration.addEmployee({ name: 'John', position: 'Manager', salary: 5000 });
+administration.addEmployee({
+  name: 'Alice',
+  position: 'Caretaker',
+  salary: 3000,
+});
+
+// Додавання тварин
+administration.addAnimal({ name: 'Lion', species: 'Panthera leo' });
+administration.addAnimal({ name: 'Elephant', species: 'Loxodonta africana' });
 
 // Створення списку клієнтів
 const clients: Visitor[] = [
-  { name: 'John', contactInfo: 'john@example.com', age: 30 },
-  { name: 'Alice', contactInfo: 'alice@example.com', age: 25 },
-  { name: 'Bob', contactInfo: 'bob@example.com', age: 35 },
+  { name: 'Bob', age: 40, contactInfo: 'ddf@gmail.com' },
+  { name: 'Carol', age: 35, contactInfo: 'wrqedf@gmail.com' },
+  { name: 'David', age: 12, contactInfo: 'dddsvgf@gmail.com' },
 ];
 
-// Відправка новин клієнтам
-const news = "Welcome to our zoo! Don't miss our special events this weekend.";
-admin2.sendNewsToClients(news, clients);
+// Відправлення новин клієнтам
+administration.sendNewsToClients('Welcome to our zoo!', clients);
+
+// Повідомлення спостерігачам про закриття зоопарку
+administration.notifyObservers();
