@@ -48,8 +48,17 @@ export abstract class Administration implements Subject {
     return this.animals;
   }
 
-  // Абстрактний метод для відправлення новин клієнтам
-  abstract sendNewsToClients(news: string, clients: Visitor[]): void;
+  // Метод для створення сповіщення про рекламні акції
+  createAdvertisementNotification(advertisement: string): void {
+    this.notifications.push(advertisement);
+    console.log(`Advertisement notification created: ${advertisement}`);
+  }
+
+  // Метод для створення сповіщення про важливі події в зоопарку
+  createEventNotification(event: string): void {
+    this.notifications.push(event);
+    console.log(`Event notification created: ${event}`);
+  }
 
   // Реалізація методів спостерігача
   addObserver(observer: Observer): void {
@@ -73,6 +82,9 @@ export abstract class Administration implements Subject {
       observer.update(this.notifications.join('\n'));
     });
   }
+
+  // Абстрактний метод для відправлення новин клієнтам
+  abstract sendNewsToClients(news: string, clients: Visitor[]): void;
 }
 
 export class ConcreteAdministration extends Administration {
