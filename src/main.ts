@@ -4,30 +4,37 @@ import { Accountant } from './servises/accounting';
 import { Visitor } from './servises/models/visitor';
 import { TicketOffice } from './servises/ticketOffice';
 import { ConcreteAdministration } from './servises/administration';
+import { ZooBudget } from './servises/budget';
 
-// Створюємо деяких працівників і тварин
+// Приклад створення списку працівників
 const employees: Employee[] = [
-  { name: 'John', salary: 2000 },
-  { name: 'Alice', salary: 2500 },
+  { name: 'John', position: 'Manager', salary: 5000 },
+  { name: 'Alice', position: 'Zookeeper', salary: 3000 },
+  // Додайте інших працівників, які вам потрібні
 ];
 
+// Приклад створення списку тварин
 const animals: Animal[] = [
-  { name: 'Lion', species: 'Panthera leo' },
-  { name: 'Elephant', species: 'Loxodonta africana' },
+  { name: 'Lion', species: 'Panthera leo', foodCost: 100 },
+  { name: 'Elephant', species: 'Loxodonta africana', foodCost: 200 },
+  // Додайте інших тварин, які вам потрібні
 ];
 
-// Створюємо об'єкт бухгалтера
-const accountant = new Accountant(employees, animals);
+// Приклад створення бюджету зоопарку
+const zooBudget = new ZooBudget(10000); // Передаємо початковий бюджет
 
-// Проводимо операції бухгалтерії
-accountant.paySalary(employees[0]); // Платимо зарплату працівнику John
-accountant.paySalary(employees[1]); // Платимо зарплату працівнику Alice
+// Створення екземпляру класу Accountant з використанням створених даних
+const accountant = new Accountant(employees, animals, zooBudget);
 
-accountant.purchaseFood(100, 2); // Покупка їжі для тварин (100 одиниць за 2 гривні за одиницю)
+// Приклад виклику методів класу Accountant
+accountant.paySalary(employees[0]); // Виплата зарплати
+accountant.purchaseFood(10, 5); // Покупка їжі
+accountant.addTicketSale({ recipient: 'Visitor1', amount: 50 }); // Додавання запису про продаж квитка
 
-accountant.incurExpenses(500); // Інші витрати на обслуговування зоопарку
+// Виклик методу управління бюджетом
+accountant.manageBudget();
 
-// Генеруємо фінансовий звіт
+// Виклик методу для генерації фінансового звіту
 accountant.generateFinancialReports();
 
 // Створення об'єкту каси зоопарку з цінами на квитки

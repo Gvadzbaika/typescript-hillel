@@ -3,24 +3,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const accounting_1 = require("./servises/accounting");
 const ticketOffice_1 = require("./servises/ticketOffice");
 const administration_1 = require("./servises/administration");
-const administration_2 = require("./servises/administration");
-// Створюємо деяких працівників і тварин
+const budget_1 = require("./servises/budget");
+// Приклад створення списку працівників
 const employees = [
-    { name: 'John', salary: 2000 },
-    { name: 'Alice', salary: 2500 },
+    { name: 'John', position: 'Manager', salary: 5000 },
+    { name: 'Alice', position: 'Zookeeper', salary: 3000 },
+    // Додайте інших працівників, які вам потрібні
 ];
+// Приклад створення списку тварин
 const animals = [
-    { name: 'Lion', species: 'Panthera leo' },
-    { name: 'Elephant', species: 'Loxodonta africana' },
+    { name: 'Lion', species: 'Panthera leo', foodCost: 100 },
+    { name: 'Elephant', species: 'Loxodonta africana', foodCost: 200 },
+    // Додайте інших тварин, які вам потрібні
 ];
-// Створюємо об'єкт бухгалтера
-const accountant = new accounting_1.Accountant(employees, animals);
-// Проводимо операції бухгалтерії
-accountant.paySalary(employees[0]); // Платимо зарплату працівнику John
-accountant.paySalary(employees[1]); // Платимо зарплату працівнику Alice
-accountant.purchaseFood(100, 2); // Покупка їжі для тварин (100 одиниць за 2 гривні за одиницю)
-accountant.incurExpenses(500); // Інші витрати на обслуговування зоопарку
-// Генеруємо фінансовий звіт
+// Приклад створення бюджету зоопарку
+const zooBudget = new budget_1.ZooBudget(10000); // Передаємо початковий бюджет
+// Створення екземпляру класу Accountant з використанням створених даних
+const accountant = new accounting_1.Accountant(employees, animals, zooBudget);
+// Приклад виклику методів класу Accountant
+accountant.paySalary(employees[0]); // Виплата зарплати
+accountant.purchaseFood(10, 5); // Покупка їжі
+accountant.addTicketSale({ recipient: 'Visitor1', amount: 50 }); // Додавання запису про продаж квитка
+// Виклик методу управління бюджетом
+accountant.manageBudget();
+// Виклик методу для генерації фінансового звіту
 accountant.generateFinancialReports();
 // Створення об'єкту каси зоопарку з цінами на квитки
 const ticketOffice = new ticketOffice_1.TicketOffice(10, 5, 20);
@@ -44,41 +50,25 @@ const familyVisitor = {
 ticketOffice.sellTicket('adult', adultVisitor);
 ticketOffice.sellTicket('child', childVisitor);
 ticketOffice.sellTicket('family', familyVisitor);
-// Створення екземпляру класу адміністрації
-const admin = new administration_1.Administration();
-// Створення та додавання співробітників
-const employee1 = {
-    name: 'John Doe',
-    position: 'Manager',
-    salary: 5000,
-};
-const employee2 = {
-    name: 'Alice Smith',
-    position: 'Zookeeper',
-    salary: 3000,
-};
-admin.addEmployee(employee1);
-admin.addEmployee(employee2);
-// Видалення співробітника
-admin.removeEmployee(employee1);
-// Створення та додавання тварин
-const animal1 = { name: 'Lion', species: 'Panthera leo' };
-const animal2 = { name: 'Elephant', species: 'Loxodonta africana' };
-admin.addAnimal(animal1);
-admin.addAnimal(animal2);
-// Видалення тварини
-admin.removeAnimal(animal1);
-// Виведення всіх співробітників, тварин
-console.log('Employees:', admin.getEmployees());
-console.log('Animals:', admin.getAnimals());
 // Створення об'єкту адміністрації
-const admin2 = new administration_2.ConcreteAdministration(); // Потрібно створити конкретний клас, який реалізує абстрактний клас адміністрації
+const administration = new administration_1.ConcreteAdministration();
+// Додавання співробітників
+administration.addEmployee({ name: 'John', position: 'Manager', salary: 5000 });
+administration.addEmployee({
+    name: 'Alice',
+    position: 'Caretaker',
+    salary: 3000,
+});
+// Додавання тварин
+administration.addAnimal({ name: 'Lion', species: 'Panthera leo' });
+administration.addAnimal({ name: 'Elephant', species: 'Loxodonta africana' });
 // Створення списку клієнтів
 const clients = [
-    { name: 'John', contactInfo: 'john@example.com', age: 30 },
-    { name: 'Alice', contactInfo: 'alice@example.com', age: 25 },
-    { name: 'Bob', contactInfo: 'bob@example.com', age: 35 },
+    { name: 'Bob', age: 40, contactInfo: 'ddf@gmail.com' },
+    { name: 'Carol', age: 35, contactInfo: 'wrqedf@gmail.com' },
+    { name: 'David', age: 12, contactInfo: 'dddsvgf@gmail.com' },
 ];
-// Відправка новин клієнтам
-const news = "Welcome to our zoo! Don't miss our special events this weekend.";
-admin2.sendNewsToClients(news, clients);
+// Відправлення новин клієнтам
+administration.sendNewsToClients('Welcome to our zoo!', clients);
+// Повідомлення спостерігачам про закриття зоопарку
+administration.notifyObservers();

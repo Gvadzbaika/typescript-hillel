@@ -8,6 +8,7 @@ class TicketOffice {
         this.familyTicketPrice = familyTicketPrice;
         this.currentVisitorsList = [];
         this.clientsList = [];
+        this.ticketSales = [];
     }
     sellTicket(ticketType, visitor) {
         let ticketPrice;
@@ -36,6 +37,10 @@ class TicketOffice {
     // Метод, який повертає клієнтів
     getClients() {
         return this.clientsList;
+    }
+    // Mетод для отримання даних про продажі квитків
+    getTicketSales() {
+        return this.ticketSales;
     }
 }
 exports.TicketOffice = TicketOffice;

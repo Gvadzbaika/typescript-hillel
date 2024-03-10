@@ -7,6 +7,7 @@ class Administration {
         this.animals = [];
         this.notifications = [];
         this.clients = [];
+        this.observers = [];
     }
     addEmployee(employee) {
         this.employees.push(employee);
@@ -42,10 +43,35 @@ class Administration {
     getAnimals() {
         return this.animals;
     }
-    sendNewsToClients(news, clients) {
-        clients.forEach((client) => {
-            console.log(`Sending news "${news}" to ${client.name}`);
-            // Логіка надсилання новин
+    // Метод для створення сповіщення про рекламні акції
+    createAdvertisementNotification(advertisement) {
+        this.notifications.push(advertisement);
+        console.log(`Advertisement notification created: ${advertisement}`);
+    }
+    // Метод для створення сповіщення про важливі події в зоопарку
+    createEventNotification(event) {
+        this.notifications.push(event);
+        console.log(`Event notification created: ${event}`);
+    }
+    // Реалізація методів спостерігача
+    addObserver(observer) {
+        this.observers.push(observer);
+        console.log('Observer added.');
+    }
+    removeObserver(observer) {
+        const index = this.observers.indexOf(observer);
+        if (index !== -1) {
+            this.observers.splice(index, 1);
+            console.log('Observer removed.');
+        }
+        else {
+            console.log('Observer not found.');
+        }
+    }
+    notifyObservers() {
+        console.log('Notifying observers...');
+        this.observers.forEach((observer) => {
+            observer.update(this.notifications.join('\n'));
         });
     }
 }
