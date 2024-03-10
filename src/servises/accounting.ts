@@ -34,4 +34,9 @@ export class Accountant {
     console.log('Financial Report:');
     console.log(`Total Expenses: ${this.expenses}`);
   }
+
+  addTicketSale(payment: Payment): void {
+    this.payments.push(payment);
+    console.log(`Ticket sale recorded successfully.`);
+  }
 }

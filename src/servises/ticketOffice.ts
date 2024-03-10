@@ -1,8 +1,10 @@
 import { Visitor } from './models/visitor';
+import { Payment } from './models/accounting';
 
 export class TicketOffice {
   private currentVisitorsList: Visitor[] = [];
   private clientsList: Visitor[] = [];
+  private ticketSales: Payment[] = [];
 
   constructor(
     private adultTicketPrice: number,
@@ -41,5 +43,9 @@ export class TicketOffice {
   // Метод, який повертає клієнтів
   getClients(): Visitor[] {
     return this.clientsList;
+  }
+  // Mетод для отримання даних про продажі квитків
+  getTicketSales(): Payment[] {
+    return this.ticketSales;
   }
 }
